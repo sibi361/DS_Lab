@@ -31,7 +31,7 @@ void swap(int *a, int *b)
     *a = *a - *b;
 }
 
-void insertion_sort(int len, int *src_array, int *array)
+void selection_sort(int len, int *src_array, int *array)
 {
     printf("Selection sorting\n\n");
     copy_array(len, src_array, array);
@@ -68,7 +68,7 @@ int main()
     print_array(n, arr);
 
     int sorted_arr[n];
-    insertion_sort(n, arr, sorted_arr);
+    selection_sort(n, arr, sorted_arr);
 
     printf("After selection sort:\n");
     print_array(n, sorted_arr);
