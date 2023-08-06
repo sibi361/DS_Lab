@@ -21,7 +21,6 @@ void print_array(int len, int *array)
 int linear_search(int len, int *array, int query)
 {
     printf("Linear search: ");
-    int found = 0;
     for (int i = 0; i < len; i++)
     {
         if (array[i] == query)
@@ -40,7 +39,7 @@ int main()
     // int arr[n];
     // get_array(n, arr);
 
-    int arr[5] = {20, 40, 3, -10, 0};
+    int arr[] = {20, 40, 3, -10, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
     printf("\nGiven array having %d elements:\n", n);

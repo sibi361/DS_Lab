@@ -31,13 +31,13 @@ void bubble_sort(int len, int *src_array, int *array)
     // int ops = 0;
     for (int i = 0; i < len - 1; i++)
     {
-        for (int j = 1; j < len - i; j++)
+        for (int j = 0; j < len - i - 1; j++)
         {
             // ops++;
-            if (array[j - 1] > array[j])
+            if (array[j] > array[j + 1])
             {
                 swapped = 1;
-                swap(&array[j - 1], &array[j]);
+                swap(&array[j], &array[j + 1]);
             }
         }
         if (!swapped)
@@ -77,8 +77,8 @@ int main()
     // int arr[n];
     // get_array(n, arr);
 
-    // int arr[5] = {1, 2, 3, 4, 5}; // reason for swapped test
-    int arr[5] = {20, 40, 3, -10, 0};
+    // int arr[] = {1, 2, 3, 4, 5}; // reason for swapped test
+    int arr[] = {20, 40, 3, -10, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
     printf("\nGiven array having %d elements:\n", n);
@@ -93,7 +93,7 @@ int main()
     int search;
     // printf("Enter search query: ");
     // scanf("%d", &search);
-    search = 20;
+    search = 40;
 
     int found_index = binary_search(n, sorted_arr, search);
     found_index == -1 ? printf("query %d NOT found in array", search)

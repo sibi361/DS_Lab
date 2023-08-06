@@ -61,16 +61,15 @@ int main()
     // int arr[n];
     // get_array(n, arr);
 
-    // int arr[5] = {1, 2, 3, 4, 5}; // reason for swapped test
-    int arr[5] = {20, 40, 3, -10, 0};
+    int arr[] = {20, 40, 3, -10, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Before selection sort:\n", n);
+    printf("Before selection sort:\n");
     print_array(n, arr);
 
     int sorted_arr[n];
     insertion_sort(n, arr, sorted_arr);
 
-    printf("After selection sort:\n", n);
+    printf("After selection sort:\n");
     print_array(n, sorted_arr);
 }

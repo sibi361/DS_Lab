@@ -40,13 +40,13 @@ void bubble_sort(int len, int *src_array, int *array)
     // int ops = 0;
     for (int i = 0; i < len - 1; i++)
     {
-        for (int j = 1; j < len - i; j++)
+        for (int j = 0; j < len - i - 1; j++)
         {
             // ops++;
-            if (array[j - 1] > array[j])
+            if (array[j] > array[j + 1])
             {
                 swapped = 1;
-                swap(&array[j - 1], &array[j]);
+                swap(&array[j], &array[j + 1]);
             }
         }
         if (!swapped)
@@ -63,17 +63,16 @@ int main()
     // int arr[n];
     // get_array(n, arr);
 
-    // int arr[5] = {1, 2, 3, 4, 5}; // reason for swapped test
-    // int arr[5] = {1, 3, 2, 4, 5}; // 10 runs, insertion has just 1
-    int arr[5] = {20, 40, 3, -10, 0};
+    // int arr[] = {1, 2, 3, 4, 5}; // reason for swapped test
+    int arr[] = {20, 40, 3, -10, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Before bubble sort:\n", n);
+    printf("Before bubble sort:\n");
     print_array(n, arr);
 
     int sorted_arr[n];
     bubble_sort(n, arr, sorted_arr);
 
-    printf("After bubble sort:\n", n);
+    printf("After bubble sort:\n");
     print_array(n, sorted_arr);
 }

@@ -24,7 +24,7 @@ void copy_array(int len, int *src, int *dest)
         dest[i] = src[i];
 }
 
-int move_within_array(int len, int *array, int i_get, int i_put)
+void move_within_array(int len, int *array, int i_get, int i_put)
 {
     int element = array[i_get];
     for (int i = i_get; i > i_put; i--)
@@ -32,7 +32,6 @@ int move_within_array(int len, int *array, int i_get, int i_put)
         array[i] = array[i - 1];
     }
     array[i_put] = element;
-    return ++len;
 }
 
 void insertion_sort(int len, int *src_array, int *array)
@@ -48,10 +47,11 @@ void insertion_sort(int len, int *src_array, int *array)
         for (j = i; array[j - 1] > key && j >= 1; j--)
             ;
         // ops++;
-        if (j < i)
+        if (j < i) // j: index of last element from right which is > key
         {
-            // one element to the right of the sorted sub-array (which starts from left)
-            // is placed in it's right place within the sorted sub-array
+            // one element to the right of the sorted sub-array,
+            // (which starts from left), i.e. the key, is placed
+            // in it's right place within the sorted sub-array
             move_within_array(len, array, i, j);
         }
     }
@@ -66,16 +66,16 @@ int main()
     // int arr[n];
     // get_array(n, arr);
 
-    // int arr[5] = {1, 3, 2, 4, 5};
-    int arr[5] = {20, 40, 3, -10, 0};
+    // int arr[] = {1, 3, 2, 4, 5};
+    int arr[] = {20, 40, 3, -10, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Before insertion sort:\n", n);
+    printf("Before insertion sort:\n");
     print_array(n, arr);
 
     int sorted_arr[n];
     insertion_sort(n, arr, sorted_arr);
 
-    printf("After insertion sort:\n", n);
+    printf("After insertion sort:\n");
     print_array(n, sorted_arr);
 }
