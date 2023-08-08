@@ -1,3 +1,13 @@
+/*
+    v1 creates array of roll numbers from the students array,
+    sorts and then loops through the sorted rolls array,
+    simultaneously looping through the students array,
+    printing the record on roll match
+
+    v2 sorts the students array after making a copy
+    and simply prints the new sorted array as is
+*/
+
 #include <stdio.h>
 
 struct student
@@ -29,44 +39,29 @@ void display_st(struct student st)
 
 void display_students(int count, struct student st_array[])
 {
-    printf("# Printing student details:\n");
     printf("Roll\t|\tName\t|\tGrade\n");
     for (int i = 0; i < count; i++)
         display_st(st_array[i]);
     printf("\n");
 }
 
-void insertion_sort(int len, int *array)
+void copy_struct_array(int count, struct student st_array[], struct student st_array_new[])
 {
-    int key, j;
-    for (int i = 1; i < len; i++)
-    {
-        key = array[i];
-        for (j = i; array[j - 1] > key && j >= 1; j--)
-            array[j] = array[j - 1];
-        array[j] = key;
-    }
+    for (int i = 0; i < count; i++)
+        st_array_new[i] = st_array[i];
 }
 
-void display_students_sorted_by_roll(int count, struct student st_array[])
+void sort_struct_array(int count, struct student st_array[])
 {
-    // adding all rolls to array
-    int rolls[count];
-    for (int i = 0; i < count; i++)
-        rolls[i] = st_array[i].roll;
-
-    // sorting rolls
-    insertion_sort(count, rolls);
-
-    printf("# Printing student details sorted by roll number:\n");
-    printf("Roll\t|\tName\t|\tGrade\n");
-    int key;
-    for (int i = 0; i < count; i++)
+    // insertion sort
+    struct student key;
+    int j;
+    for (int i = 1; i < count; i++)
     {
-        key = rolls[i];
-        for (int j = 0; j < count; j++)
-            if (st_array[j].roll == key)
-                display_st(st_array[j++]);
+        key = st_array[i];
+        for (j = i; st_array[j - 1].roll > key.roll && j >= 1; j--)
+            st_array[j] = st_array[j - 1];
+        st_array[j] = key;
     }
 }
 
@@ -88,7 +83,13 @@ int main()
 
     // read_students(NUM_STUDENTS, students);
 
+    printf("# Printing student details:\n");
     display_students(NUM_STUDENTS, students);
 
-    display_students_sorted_by_roll(NUM_STUDENTS, students);
+    struct student students_sorted[NUM_STUDENTS];
+    copy_struct_array(NUM_STUDENTS, students, students_sorted);
+    sort_struct_array(NUM_STUDENTS, students_sorted);
+
+    printf("# Printing student details sorted by roll number:\n");
+    display_students(NUM_STUDENTS, students_sorted);
 }
