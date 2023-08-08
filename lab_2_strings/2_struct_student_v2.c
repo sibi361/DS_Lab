@@ -33,13 +33,13 @@ void display_st(struct student st)
 {
     printf("%d\t|\t", st.roll);
     printf("%s\t|\t", st.name);
-    printf("%c", st.grade);
+    printf("%c\t|", st.grade);
     printf("\n");
 }
 
 void display_students(int count, struct student st_array[])
 {
-    printf("Roll\t|\tName\t|\tGrade\n");
+    printf("Roll\t|\tName\t|\tGrade\t|\n");
     for (int i = 0; i < count; i++)
         display_st(st_array[i]);
     printf("\n");
