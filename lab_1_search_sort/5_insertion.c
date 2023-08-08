@@ -45,16 +45,23 @@ void insertion_sort(int len, int *src_array, int *array)
     {
         key = array[i];
         for (j = i; array[j - 1] > key && j >= 1; j--)
-            ;
-        // ops++;
-        if (j < i) // j: index of last element from right which is > key
-        {
-            // one element to the right of the sorted sub-array,
-            // (which starts from left), i.e. the key, is placed
-            // in it's right place within the sorted sub-array
-            move_within_array(len, array, i, j);
-        }
+            array[j] = array[j - 1];
+        array[j] = key;
     }
+    // below is super understandable version
+    // {
+    //     key = array[i];
+    //     for (j = i; array[j - 1] > key && j >= 1; j--)
+    //         ;
+    //     // ops++;
+    //     if (j < i) // j: index of last element from right which is > key
+    //     {
+    //         // one element to the right of the sorted sub-array,
+    //         // (which starts from left), i.e. the key, is placed
+    //         // in it's right place within the sorted sub-array
+    //         move_within_array(len, array, i, j);
+    //     }
+    // }
     // printf("# Insertion sort: total runs: %d\n\n", ops);
 }
 
