@@ -44,7 +44,10 @@ struct Time add_time(struct Time t1, struct Time t2)
     sec_2 = t2.hour * 3600 + t2.min * 60 + t2.sec;
 
     sec_sum = sec_1 + sec_2;
-    h = sec_sum / 3600; // prevent overflow
+    if (sec_sum > 86400)
+        sec_sum %= 86400;
+
+    h = sec_sum / 3600;
     m = sec_sum % 3600 / 60;
     s = sec_sum % 3600 - m * 60;
 
@@ -61,7 +64,7 @@ int main()
     // struct Time user_time_2 = read_time();
 
     struct Time user_time_1 = {23, 59, 59};
-    struct Time user_time_2 = {0, 0, 1};
+    struct Time user_time_2 = {0, 0, 3};
 
     printf("\nTime 1: ");
     print_time(user_time_1);
