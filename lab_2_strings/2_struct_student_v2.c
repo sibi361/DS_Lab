@@ -20,11 +20,11 @@ struct student
 void read_students(int count, struct student st_array[])
 {
     printf("\n# Reading student details from user\n");
-    printf("Enter <roll number> <name> <grade>\n");
+    printf("Enter <roll number> <grade> <name>\n");
     for (int i = 0; i < count; i++)
     {
         printf("Student %d: ", i + 1);
-        scanf("%d %s %c", &st_array[i].roll, st_array[i].name, &st_array[i].grade);
+        scanf("%d %c %[^\n]s", &st_array[i].roll, &st_array[i].grade, st_array[i].name);
         printf("\n");
     }
 }
@@ -55,8 +55,7 @@ void sort_struct_array(int count, struct student st_array[])
 {
     // insertion sort
     struct student key;
-    int j;
-    for (int i = 1; i < count; i++)
+    for (int i = 1, j; i < count; i++)
     {
         key = st_array[i];
         for (j = i; st_array[j - 1].roll > key.roll && j >= 1; j--)
@@ -65,23 +64,20 @@ void sort_struct_array(int count, struct student st_array[])
     }
 }
 
-int main()
+void main()
 {
-    // printf("\nEnter sub string to delete: ");
-    // gets(sub);
-
     int NUM_STUDENTS = 3;
     struct student students[NUM_STUDENTS];
 
     // sample records
-    struct student s1 = {100, "Shaun", 'A'};
-    struct student s2 = {2, "Rohan", 'C'};
-    struct student s3 = {30, "Karan", 'D'};
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    // struct student s1 = {100, "Shaun", 'A'};
+    // struct student s2 = {2, "Rohan", 'C'};
+    // struct student s3 = {30, "Karan", 'D'};
+    // students[0] = s1;
+    // students[1] = s2;
+    // students[2] = s3;
 
-    // read_students(NUM_STUDENTS, students);
+    read_students(NUM_STUDENTS, students);
 
     printf("# Printing student details:\n");
     display_students(NUM_STUDENTS, students);
