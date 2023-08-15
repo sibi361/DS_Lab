@@ -70,9 +70,9 @@ struct Time subtract_time(struct Time t1, struct Time t2)
     return t_new;
 };
 
-int main()
+void main()
 {
-    int valid = 0, hour, minute, second;
+    int hour, minute, second;
 
     printf("Enter time as <hour> <min> <second>:\n");
     // printf("Enter time 1: ");
