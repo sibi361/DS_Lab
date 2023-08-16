@@ -8,36 +8,43 @@ int get_string_length(char st[])
     return i;
 }
 
-int find_substring(char main[], char sub[])
+int find_substrings(char main[], char sub[], int indexes[])
 {
+    // returns index of every match
+
     int l_main = get_string_length(main);
     int l_sub = get_string_length(sub);
-    int in = 0, found = 1;
+    int in = 0, found = 1, i, j;
     int new_len = l_main - l_sub;
+    int matches = 0;
 
-    for (int i = 0, j = 0; i <= l_main; i++)
+    for (i = 0, j = 0; i <= l_main; i++)
     {
         // printf("%d %d %d\n", i, j, in);
         if (in == 1)
-        { // inside a probable match
+        {
             for (; j < l_sub; j++)
-                // printf("## %d %d %c %c\n", i + j - 1, j, main[i + j - 1], sub[j]);
-
-                // traverse main and sub simultaneously
+            {
+                // printf("## %d %c %c\n", j, main[i + j - 1], sub[j]);
                 if (main[i + j - 1] != sub[j])
                 {
                     found = 0;
                     break;
                 }
+            }
             if (found == 1)
-                return i - 1;
+            {
+                indexes[matches++] = i - 1;
+                in = j = 0;
+            }
             else
-                in = j = 0; // reset sub's index to its first char
+                in = j = 0;
         }
         if (main[i] == sub[j])
             in = j = 1;
     }
-    return -1;
+
+    return matches;
 }
 
 void delete_substring(char main[], char sub[], int start_i)
@@ -61,13 +68,21 @@ void main()
     // printf("\nEnter sub string to find: ");
     // gets(sub);
 
-    char main[1000] = "test 01234 5_6789";
-    char sub[1000] = "34 5";
+    char main[1000] = "ABCDE_FGHIJCDE_";
+    char sub[1000] = "CDE";
 
-    int index_sub = find_substring(main, sub);
-    if (index_sub != -1)
-        delete_substring(main, sub, index_sub);
+    int matched_indexes[1000];
+    int match_count = find_substrings(main, sub, matched_indexes);
 
-    printf("\nMain string after deletion of sub string:\n%s\n", main);
-    printf("\n");
+    int len_sub = get_string_length((sub)), offset = 0;
+    if (match_count != 0)
+        for (int i = 0; i < match_count; i++)
+        {
+            delete_substring(main, sub, matched_indexes[i] - offset);
+            offset += len_sub;
+            // match index needs to be shortened as the deletion of substring
+            // multiple times reduces string length
+        }
+
+    printf("\nMain string after deletion of sub string:\n%s\n\n", main);
 }
