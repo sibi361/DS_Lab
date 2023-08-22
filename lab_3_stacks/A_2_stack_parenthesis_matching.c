@@ -4,13 +4,6 @@
 void push(char stack[], int *top, int expression_length, int item);
 char pop(char stack[], int *top);
 
-void print_stack(int stack[], int top)
-{
-    for (int i = 0; i <= top; i++)
-        printf("%d ", stack[i]);
-    printf("\n");
-}
-
 void main()
 {
     printf("\nParenthesis Matching Using Stack\n\n");
@@ -18,15 +11,16 @@ void main()
     int top, exp_len, valid = 1;
     char temp, popped;
     // char exp[100]; // expression
-
     printf("Enter expression: ");
     // scanf("%[^\n]s", exp);
 
-    char exp[100] = "{[}]";
-    printf("\n");
+    // test cases
+    char exp[100] = "b * (c + [d / e] * f)";
+    // char exp[100] = "b * (c + [d / e) * f]";
+    // char exp[100] = "b * (c + [d / e] * f) * 2)";
+    printf("%s\n", exp);
 
     exp_len = strlen(exp);
-
     char stack_opening[exp_len];
     top = -1;
 
@@ -37,19 +31,39 @@ void main()
         if (temp == '(' || temp == '[' || temp == '{')
         {
             push(stack_opening, &top, exp_len, exp[i]);
-            printf("PUSH %c\n", temp);
+            // printf("PUSH %c\n", temp);
         }
         else if (temp == ')' || temp == ']' || temp == '}')
         {
             popped = pop(stack_opening, &top);
+            // printf("POP %c %c\n", temp, popped);
 
-            printf("POP %c %c %d\n", temp, popped, temp != popped);
-
-            if (temp == ')' && popped != '(' | temp == ']' && popped != '[' | temp == '}' && popped != '{')
+            if (temp == ')' && popped != '(' ||
+                temp == ']' && popped != '[' ||
+                temp == '}' && popped != '{')
             {
                 valid = 0;
                 break;
             }
+
+            // reason for wrong output i.e. "{[}]" being returned
+            // as valid:
+            // if (temp == ')' && popped != '(' |
+            // temp == ']' && popped != '[' |
+            // temp == '}' && popped != '{') {...}
+
+            // [ | ] > [ && ] in precedence hence it would
+            // evaluate as follows:
+            // if(temp == ')' && 0 && 0 && popped != '{' = 0) {...}
+
+            // fixed it by switching to short-circuit OR [ || ]
+            // as if any one of the bracket mismatch conditions evaluates
+            // to true, the expression is to be declared invalid
+
+            // another possible fix:
+            // if ((temp == ')' && popped != '(') |
+            //     (temp == ']' && popped != '[') |
+            //     (temp == '}' && popped != '{')) {...}
         }
     }
 
