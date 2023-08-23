@@ -35,7 +35,7 @@ void main()
 {
     printf("\nMultiple Integer Stack Demonstration\n\n");
 
-    int stack[exp_len], top[NUM_STACKS], boundary[NUM_STACKS];
+    int stack[MAX_SIZE], top[NUM_STACKS], boundary[NUM_STACKS];
     initialise_stack(stack, top, boundary);
 
     int stack_pos, stack_index, option, temp, output;
@@ -115,7 +115,7 @@ int initialise_stack(int stack[], int top[], int bound[])
     for (int i = 0; i < NUM_STACKS; i++)
         top[i] = bound[i] = i * DELTA - 1;
 
-    for (int i = 0; i < exp_len; i++)
+    for (int i = 0; i < MAX_SIZE; i++)
         stack[i] = 0;
 }
 
@@ -137,7 +137,7 @@ int push(int stack[], int stack_i, int top[], int bound[], int item)
 {
     if (stack_i == NUM_STACKS - 1)
     {
-        if (top[stack_i] == exp_len - 1) // stack overflow
+        if (top[stack_i] == MAX_SIZE - 1) // stack overflow
             return 0;
     }
     else if (top[stack_i] == bound[stack_i + 1]) // stack overflow
