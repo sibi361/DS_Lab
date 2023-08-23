@@ -15,11 +15,10 @@ void main()
     printf("\nEnter string: ");
     fgets(str, 1000, stdin);
 
-    string_len = strlen(str);
-    char stack[string_len - 1];
+    string_len = strlen(str) - 1; // because fgets() appends newline
+    char stack[string_len];
 
-    // i < string_len - 1 in order to exclude the null character
-    for (int i = 0; i < string_len - 1; i++)
+    for (int i = 0; i < string_len; i++)
         push(stack, &top, str[i]);
 
     for (int i = 0; i < string_len / 2; i++)
