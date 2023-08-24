@@ -2,16 +2,17 @@
 #include <stdlib.h>
 
 int push(char stack[], int *top, int item);
-int pop(char stack[], int *top);
+char pop(char stack[], int *top);
 int num_strlen(int input);
-void change_base(char stack[], int *top, int base, unsigned input);
-int num_len, max_size;
+void change_base(char stack[], int *top, int base, unsigned long input);
+int max_size;
 
 void main()
 {
     printf("\nBase Converter Using Stack\n");
 
-    int top = -1, base_new, temp;
+    int top = -1, num_len, base_new;
+    char temp;
     unsigned long num; // to allow large inputs
 
     printf("\nEnter number: ");
@@ -38,7 +39,7 @@ void main()
 
     // printing base converted number
     temp = pop(stack, &top);
-    while (temp != -99999)
+    while (temp != '\0')
     {
         printf("%c", temp);
         temp = pop(stack, &top);
@@ -49,17 +50,16 @@ void main()
 
 int push(char stack[], int *top, int item)
 {
-
     if (*top == max_size - 1) // stack overflow
         return 0;
     stack[++*top] = item;
     return 1;
 }
 
-int pop(char stack[], int *top)
+char pop(char stack[], int *top)
 {
     if (*top == -1) // stack underflow
-        return -99999;
+        return '\0';
 
     // prefix and postfix ops have higher precedence
     // than dereference operator
@@ -74,9 +74,9 @@ int num_strlen(int input)
     return len;
 }
 
-void change_base(char stack[], int *top, int base, unsigned input)
+void change_base(char stack[], int *top, int base, unsigned long input)
 {
-    unsigned long num;
+    int num;
     char character;
     do
     {
