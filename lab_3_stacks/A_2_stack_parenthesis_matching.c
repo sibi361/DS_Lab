@@ -10,15 +10,15 @@ void main()
 
     int top, exp_len, valid = 1;
     char temp, popped;
-    // char exp[100]; // expression
+    char exp[100]; // expression
     printf("Enter expression: ");
-    // scanf("%[^\n]s", exp);
+    scanf("%[^\n]s", exp);
 
     // test cases
-    char exp[100] = "b * (c + [d / e] * f)";
+    // char exp[100] = "b * (c + [d / e] * f)";
     // char exp[100] = "b * (c + [d / e) * f]";
     // char exp[100] = "b * (c + [d / e] * f) * 2)";
-    printf("%s\n", exp);
+    // printf("%s\n", exp);
 
     exp_len = strlen(exp);
     char stack_opening[exp_len];
