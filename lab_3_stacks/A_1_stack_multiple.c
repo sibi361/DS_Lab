@@ -72,14 +72,10 @@ void main()
 
         case 2:
             temp = pop(stack, stack_index, top, boundary);
-            switch (temp)
-            {
-            case -99999:
+            if (temp == -99999)
                 printf("# ERROR: STACK UNDERFLOW in stack %d\n", stack_pos);
-                break;
-            default:
+            else
                 printf("# popped %d from stack %d\n", temp, stack_pos);
-            }
             break;
 
         case 3:
@@ -100,7 +96,7 @@ void main()
 
         case 6:
             clearAllStacks(top, boundary);
-            printf("# stack %d has been cleared\n", stack_pos);
+            printf("# All stacks have been cleared\n");
             printf("# Exiting\n\n");
             break;
 
@@ -121,27 +117,26 @@ int initialise_stack(int stack[], int top[], int bound[])
 
 int stackSelection(int *stack_pos, int *stack_index)
 {
+    int temp_stack_pos;
     printf("Enter stack number: ");
-    scanf("%d", stack_pos);
-    if (*stack_pos < 1 || *stack_pos > NUM_STACKS)
+    scanf("%d", &temp_stack_pos);
+    if (temp_stack_pos < 1 || temp_stack_pos > NUM_STACKS)
     {
         printf("# ERROR: Invalid stack number\n");
         printf("Available stacks: 1 to %d\n\n", NUM_STACKS);
         return 0;
     }
-    *stack_index = *stack_pos - 1;
+    *stack_pos = temp_stack_pos;
+    *stack_index = temp_stack_pos - 1;
     return 1;
 }
 
 int push(int stack[], int stack_i, int top[], int bound[], int item)
 {
-    if (stack_i == NUM_STACKS - 1)
-    {
-        if (top[stack_i] == MAX_SIZE - 1) // stack overflow
-            return 0;
-    }
-    else if (top[stack_i] == bound[stack_i + 1]) // stack overflow
-        return 0;
+    if ((stack_i == NUM_STACKS - 1 &&
+         top[stack_i] == MAX_SIZE - 1) ||
+        top[stack_i] == bound[stack_i + 1])
+        return 0; // stack overflow
     stack[++top[stack_i]] = item;
     return 1;
 }
