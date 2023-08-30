@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// #define DEFAULT_ROWS 0 // if (non_zero_count > 0) ... not required
+// #define DEFAULT_COLUMNS 0
 // #define DEFAULT_ROWS 3
 // #define DEFAULT_COLUMNS 3
 // #define DEFAULT_ROWS 5
@@ -39,6 +41,7 @@ void main()
     // non_zero_count = get_matrix(mat, m, n);
 
     // test cases
+    // int mat[][0] = {};
     // int mat[][DEFAULT_COLUMNS] = {{0, 1, 0}, {0, 0, 2}, {3, 0, 0}};
     // int mat[][DEFAULT_COLUMNS] = {{12, 10, 0},
     //                               {0, 0, 56},
@@ -129,7 +132,8 @@ void sparse_matrix_transpose(sparse mat_sparse[], sparse mat_sparse_transpose[])
     int rows = mat_sparse[0].row,
         cols = mat_sparse[0].col,
         non_zero_count = mat_sparse[0].val,
-        k = 1, end; // mat_sparse_transpose index
+        k = 1, // mat_sparse_transpose index
+        end;
 
     // swapping rows and columns in metadata
     mat_sparse_transpose[0].row = mat_sparse[0].col;
