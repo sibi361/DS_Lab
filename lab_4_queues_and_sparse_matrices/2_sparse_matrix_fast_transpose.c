@@ -54,8 +54,8 @@ void main()
     matrix_size = m * n / 2;
     if (non_zero_count > matrix_size)
     {
-        printf("\nERROR: Given matrix is NOT sparse as count(non-zero elements)\
-[%d] is > half the matrix size[%d]\n\n",
+        printf("\nERROR: Given matrix is NOT sparse as \
+count(non-zero elements) [%d] is > half the matrix size[%d]\n\n",
                non_zero_count, matrix_size);
         exit(0);
     }
@@ -153,7 +153,7 @@ void sparse_matrix_transpose(sparse mat_sparse[],
         row_count[col] = 0;
 
     for (int i = 1; i <= non_zero_count; i++)
-        // increase the column count of the column to which the
+        // increment column count of the column to which the
         // mat_sparse[i] belongs to
         ++row_count[mat_sparse[i].col];
 
@@ -173,9 +173,8 @@ void sparse_matrix_transpose(sparse mat_sparse[],
 
     sparse_start_pos[0] = 1;
     for (int i = 1; i <= non_zero_count; i++)
-    {
-        sparse_start_pos[i] = sparse_start_pos[i - 1] + row_count[i - 1];
-    }
+        sparse_start_pos[i] = sparse_start_pos[i - 1] +
+                              row_count[i - 1];
 
     for (int i = 1; i <= non_zero_count; i++)
     {

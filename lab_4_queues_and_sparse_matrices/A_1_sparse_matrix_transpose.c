@@ -152,7 +152,7 @@ void sparse_matrix_transpose(sparse mat_sparse[], sparse mat_sparse_transpose[])
     }
 
     /*
-    old lengthy code:
+    previous incorrect code:
     int end;
     if (cols > rows)
         end = cols;
