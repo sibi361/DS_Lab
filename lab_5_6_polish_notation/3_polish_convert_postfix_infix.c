@@ -12,7 +12,7 @@ char *pop_2d(char stack[][MAX_SIZE], int *top);
 
 int main()
 {
-    // char exp[1000]; // input infix expression
+    // char exp[1000];
     // printf("\nEnter infix expression: ");
     // scanf("%[^\n]s", exp);
 
@@ -25,7 +25,7 @@ int main()
     // ( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J )
     // char exp[] = "H A B C + D * + F * G * E * * J +";
 
-    char exp_infix[MAX_SIZE][MAX_SIZE],
+    char stack[MAX_SIZE][MAX_SIZE],
         temp_exp[MAX_SIZE],
         op2[MAX_SIZE],
         temp,
@@ -44,7 +44,7 @@ int main()
         {
             op_push_temp[0] = temp;
             op_push_temp[1] = '\0';
-            push_2d(exp_infix, &top, op_push_temp);
+            push_2d(stack, &top, op_push_temp);
         }
 
         else
@@ -56,13 +56,13 @@ int main()
             // too far
             temp_exp[j] = '\0';
 
-            strcpy(op2, pop_2d(exp_infix, &top)); // save op2
+            strcpy(op2, pop_2d(stack, &top)); // save op2
 
-            strcat(temp_exp, pop_2d(exp_infix, &top)); // append op1
+            strcat(temp_exp, pop_2d(stack, &top)); // append op1
 
             j = strlen(temp_exp);
             temp_exp[j++] = temp; // append operator
-            temp_exp[j++] = '\0';
+            temp_exp[j] = '\0';
 
             strcat(temp_exp, op2); // append op2
 
@@ -70,13 +70,13 @@ int main()
             temp_exp[j++] = ')';
             temp_exp[j] = '\0';
 
-            push_2d(exp_infix, &top, temp_exp);
+            push_2d(stack, &top, temp_exp);
         }
     }
 
     printf("Given postfix expression:\n%s\n", exp);
 
-    printf("\nObtained infix expression:\n%s\n\n", pop_2d(exp_infix, &top));
+    printf("\nObtained infix expression:\n%s\n\n", pop_2d(stack, &top));
     return 0;
 }
 
