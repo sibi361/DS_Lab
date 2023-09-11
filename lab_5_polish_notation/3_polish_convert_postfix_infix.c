@@ -1,16 +1,14 @@
 // Polish Notation
 // Conversion of postfix expression to infix expression
 
-// WIP
-
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_SIZE 1000
 
 int is_operator(char operator);
-int push(char stack[], int *top, char item);
-char pop(char stack[], int *top);
+int push_2d(char stack[][MAX_SIZE], int *top, char *item);
+char *pop_2d(char stack[][MAX_SIZE], int *top);
 
 int main()
 {
@@ -18,74 +16,88 @@ int main()
     // printf("\nEnter infix expression: ");
     // scanf("%[^\n]s", exp);
 
-    // https://www.cs.kent.edu/~nmadi/CS23001/fix-Quiz.pdf
     char exp[] = "abc-d*+"; // (a+(b-c)*d)
-    // char exp[] = "A B    C * + D /"; // : ( ( A + ( B * C ) ) / D )
 
-    char exp_infix[MAX_SIZE],
-        stack[MAX_SIZE],
+    // https://www.cs.kent.edu/~nmadi/CS23001/fix-Quiz.pdf
+    // ( ( A + ( B * C ) ) / D )
+    // char exp[] = "A B    C * + D /";
+
+    // ( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J )
+    // char exp[] = "H A B C + D * + F * G * E * * J +";
+
+    char exp_infix[MAX_SIZE][MAX_SIZE],
         temp_exp[MAX_SIZE],
-        op1,
-        op2,
-        temp;
+        op2[MAX_SIZE],
+        temp,
+        op_push_temp[2];
 
-    int top, i, j, first_run;
+    int top, i, j;
     top = -1;
-    i = 0, first_run = 1;
+    i = 0;
 
     while ((temp = exp[i++]) != '\0')
     {
         if (temp == ' ')
             continue;
 
-        if (!is_operator(temp))
-            push(stack, &top, temp);
+        else if (!is_operator(temp))
+        {
+            op_push_temp[0] = temp;
+            op_push_temp[1] = '\0';
+            push_2d(exp_infix, &top, op_push_temp);
+        }
 
         else
         {
             j = 0;
             temp_exp[j++] = '(';
 
-            op2 = pop(stack, &top);
-            if (first_run)
-            {
-                op1 = pop(stack, &top);
-                temp_exp[j++] = op1;
-                first_run = 0;
-            }
-            else
-            {
-                temp_exp[j] = '\0';
-                strcat(temp_exp, exp_infix);
-                j += strlen(exp_infix);
-            }
+            // necessary to prevent string.h functions from reading
+            // too far
+            temp_exp[j] = '\0';
 
-            temp_exp[j++] = temp;
-            temp_exp[j++] = op2;
+            strcpy(op2, pop_2d(exp_infix, &top)); // save op2
+
+            strcat(temp_exp, pop_2d(exp_infix, &top)); // append op1
+
+            j = strlen(temp_exp);
+            temp_exp[j++] = temp; // append operator
+            temp_exp[j++] = '\0';
+
+            strcat(temp_exp, op2); // append op2
+
+            j = strlen(temp_exp);
             temp_exp[j++] = ')';
             temp_exp[j] = '\0';
 
-            strcpy(exp_infix, temp_exp);
-            exp_infix[strlen(exp_infix)] = '\0';
+            push_2d(exp_infix, &top, temp_exp);
         }
     }
 
-    printf("\nObtained infix expression:\n%s\n\n", exp_infix);
+    printf("Given postfix expression:\n%s\n", exp);
+
+    printf("\nObtained infix expression:\n%s\n\n", pop_2d(exp_infix, &top));
     return 0;
 }
 
-int push(char stack[], int *top, char item)
+int push_2d(char stack[][MAX_SIZE], int *top, char *item)
 {
     if (*top == MAX_SIZE - 1) // stack overflow
         return 0;
-    stack[++*top] = item;
+
+    // printf("pushing %s\n", item);
+
+    stack[++*top][0] = '\0';
+    strcpy(stack[*top], item);
+    stack[*top][strlen(stack[*top])] = '\0';
+
     return 1;
 }
 
-char pop(char stack[], int *top)
+char *pop_2d(char stack[][MAX_SIZE], int *top)
 {
     if (*top == -1) // stack underflow
-        return '\0';
+        return NULL;
     // prefix and postfix ops have higher precedence
     // than dereference operator
     return stack[(*top)--];
