@@ -19,8 +19,8 @@ int main()
     // scanf("%[^\n]s", exp);
 
     // https://www.cs.kent.edu/~nmadi/CS23001/fix-Quiz.pdf
-    // char exp[] = "abc-d*+"; // (a+(b-c)*d)
-    char exp[] = "X B C * + D E /"; // : ( ( X + ( B * C ) ) / ( D E ) )
+    char exp[] = "abc-d*+"; // (a+(b-c)*d)
+    // char exp[] = "A B    C * + D /"; // : ( ( A + ( B * C ) ) / D )
 
     char exp_infix[MAX_SIZE],
         stack[MAX_SIZE],
@@ -29,9 +29,9 @@ int main()
         op2,
         temp;
 
-    int top, i, j, first_blood;
+    int top, i, j, first_run;
     top = -1;
-    i = 0, first_blood = 1;
+    i = 0, first_run = 1;
 
     while ((temp = exp[i++]) != '\0')
     {
@@ -47,11 +47,11 @@ int main()
             temp_exp[j++] = '(';
 
             op2 = pop(stack, &top);
-            if (first_blood)
+            if (first_run)
             {
                 op1 = pop(stack, &top);
-                first_blood = 0;
                 temp_exp[j++] = op1;
+                first_run = 0;
             }
             else
             {
@@ -63,6 +63,7 @@ int main()
             temp_exp[j++] = temp;
             temp_exp[j++] = op2;
             temp_exp[j++] = ')';
+            temp_exp[j] = '\0';
 
             strcpy(exp_infix, temp_exp);
             exp_infix[strlen(exp_infix)] = '\0';
