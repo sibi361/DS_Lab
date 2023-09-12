@@ -1,17 +1,26 @@
 // Polish Notation
-// Conversion of infix expression to reverse Polish i.e.
-// postfix notation
+// Conversion of infix expression to Polish i.e. prefix notation
+
+/*
+method: infix -> postfix followed by reversing to get prefix
+this code is flawed as bc- becomes -cb when reversed
+
+can be fixed when evaluating by:
+    - swapping op1 and op2 when evaluating
+    - NOPE THIS DOES NOT WORK: negating the final result i.e. result *= -1;
+*/
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int max_size;
 
-char *convert_infix_postfix(char exp[]);
 int push(char stack[], int *top, char item);
 char pop(char stack[], int *top);
 int input_precedence(char literal);
 int output_precedence(char literal);
+char *reverse_string(char inp[]);
 
 void print_stack(char stack[], int top)
 {
@@ -27,20 +36,13 @@ void main()
     // printf("\nEnter infix expression: ");
     // scanf("%[^\n]s", exp);
 
-    // char exp[] = "(a+(b-c)*d)"; // abc-d*+
-    char exp[] = "a * b - c"; // ab*c-
+    char exp[] = "(a+(b-c)*d)"; // +*d-cba
+    // char exp[] = "a * b - c"; // -c*ba
 
-    printf("\nObtained postfix expression:\n%s\n\n", convert_infix_postfix(exp));
-}
-
-char *convert_infix_postfix(char exp[])
-{
     max_size = strlen(exp);
-    char temp, stack_top;
+    char exp_postfix[max_size], temp, stack_top;
     char stack[max_size];
     int top, i, j;
-
-    char *exp_postfix = (char *)malloc(sizeof(exp));
 
     top = i = j = 0;
     stack[0] = '#'; // placeholder to indicate empty stack
@@ -76,7 +78,10 @@ char *convert_infix_postfix(char exp[])
         exp_postfix[j++] = pop(stack, &top);
     exp_postfix[j] = '\0';
 
-    return exp_postfix;
+    char *exp_prefix = reverse_string(exp_postfix);
+    printf("\nObtained prefix expression:\n%s\n\n", exp_prefix);
+
+    // print_stack(stack, top);
 }
 
 int push(char stack[], int *top, char item)
@@ -140,4 +145,17 @@ int output_precedence(char literal)
     default:
         return 8;
     }
+}
+
+char *reverse_string(char inp[])
+{
+    int len = strlen(inp);
+
+    char *rev = (char *)malloc(len);
+
+    for (int i = len - 1; i >= 0; i--)
+        rev[len - i - 1] = inp[i];
+    rev[len] = '\0';
+
+    return rev;
 }

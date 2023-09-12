@@ -1,35 +1,49 @@
 // Polish Notation
-// Conversion of postfix expression to infix expression
+// Conversion of prefix expression to infix expression
+
+/*
+method: reverse prefix followed postfix -> infix
+this code could have been flawed as during prefix -> infix
+*BC becomes *CB instead of *BC
+
+fixed by not saving op2 i.e. when operator found,
+first one popped is appended first followed by the second one popped
+opposite to how it was done in postfix -> infix
+*/
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_SIZE 1000
 
 int is_operator(char operator);
 int push_2d(char stack[][MAX_SIZE], int *top, char *item);
 char *pop_2d(char stack[][MAX_SIZE], int *top);
+char *reverse_string(char inp[]);
 
 int main()
 {
-    // char exp[1000];
-    // printf("\nEnter postfix expression: ");
-    // scanf("%[^\n]s", exp);
+    // char _exp[1000];
+    // printf("\nEnter prefix expression: ");
+    // scanf("%[^\n]s", _exp);
 
-    char exp[] = "abc-d*+"; // (a+(b-c)*d)
+    // char _exp[] = "+*d-bca"; // (a+(b-c)*d)
 
     // https://www.cs.kent.edu/~nmadi/CS23001/fix-Quiz.pdf
     // ( ( A + ( B * C ) ) / D )
-    // char exp[] = "A B    C * + D /";
+    char _exp[] = "/ D + * B    C A";
 
     // ( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J )
-    // char exp[] = "H A B C + D * + F * G * E * * J +";
+    // char _exp[] = "+ J * * E * G * F + * D + C B A H";
 
     char stack[MAX_SIZE][MAX_SIZE],
         temp_exp[MAX_SIZE],
         op2[MAX_SIZE],
         temp,
         op_push_temp[2];
+
+    char *exp = reverse_string(_exp);
 
     int top, i, j;
     top = -1;
@@ -74,7 +88,7 @@ int main()
         }
     }
 
-    printf("Given postfix expression:\n%s\n", exp);
+    printf("Given prefix expression:\n%s\n", _exp);
 
     printf("\nObtained infix expression:\n%s\n\n", pop_2d(stack, &top));
     return 0;
@@ -116,4 +130,17 @@ int is_operator(char operator)
         return 1;
     }
     return 0;
+}
+
+char *reverse_string(char inp[])
+{
+    int len = strlen(inp);
+
+    char *rev = (char *)malloc(len);
+
+    for (int i = len - 1; i >= 0; i--)
+        rev[len - i - 1] = inp[i];
+    rev[len] = '\0';
+
+    return rev;
 }
