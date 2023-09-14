@@ -22,7 +22,7 @@ int push_2d(char stack[][MAX_SIZE], int *top, char *item);
 char *pop_2d(char stack[][MAX_SIZE], int *top);
 char *reverse_string(char inp[]);
 
-int main()
+void main()
 {
     // char _exp[1000];
     // printf("\nEnter prefix expression: ");
@@ -91,7 +91,6 @@ int main()
     printf("Given prefix expression:\n%s\n", _exp);
 
     printf("\nObtained infix expression:\n%s\n\n", pop_2d(stack, &top));
-    return 0;
 }
 
 int push_2d(char stack[][MAX_SIZE], int *top, char *item)

@@ -1,6 +1,6 @@
 /*
 Polish Notation
-Evaluation of reverse Polish i.e. postfix expression
+Evaluation of prefix expression
 
 method: convert prefix to postfix and evaluate postfix
 */
@@ -8,6 +8,7 @@ method: convert prefix to postfix and evaluate postfix
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define MAX_SIZE 1000
 
@@ -20,7 +21,7 @@ char *reverse_string(char inp[]);
 void main()
 {
     // char _exp[MAX_SIZE];
-    // printf("\nEnter postfix expression: ");
+    // printf("\nEnter prefix expression: ");
     // scanf("%[^\n]s", _exp);
 
     // test cases
@@ -39,7 +40,8 @@ int eval_postfix_ie_reversed_prefix(char exp[])
 {
     char temp, op1, op2;
     int stack[MAX_SIZE];
-    int top = -1, i = 0, result = 0;
+    int top = -1, i = 0;
+    double result = 0;
 
     while ((temp = exp[i++]) != '\0')
     {
@@ -70,7 +72,7 @@ int eval_postfix_ie_reversed_prefix(char exp[])
             switch (temp)
             {
             case '^':
-                result = op1 ^ op2;
+                result = pow(op1, op2);
                 break;
             case '%':
                 result = op1 % op2;
