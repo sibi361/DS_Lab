@@ -23,9 +23,8 @@ void main()
 {
     int list1_arr[] = {5, 10, 15};
     // int list1_arr[] = {5, 10, 15, 20, 453};
-    int list2_arr[] = {20, -3, 55, 876};
+    int list2_arr[] = {20, -3, 55, 76};
 
-    // creating
     node *list1 = createLinkedListFromArray(
         sizeof(list1_arr) / sizeof(list1_arr[0]),
         list1_arr);
@@ -100,11 +99,9 @@ void traverseLinkedList(node *head)
 {
     node *n = head;
 
-    while (n != NULL)
-    {
+    do
         printf("%d ", n->data);
-        n = n->next;
-    }
+    while ((n = n->next) != NULL);
     printf("\n\n");
 }
 
@@ -121,51 +118,27 @@ int getLength(node *head)
 
 node *alternateMerge(node *list1, node *list2)
 {
-    int l1, l2, i;
     node *merged, *n1, *n2;
 
     n1 = list1;
     n2 = list2;
 
-    l1 = getLength(list1);
-    l2 = getLength(list2);
+    merged = createNode(n1->data);
+    append(merged, n2->data);
 
-    if (l1 < l2)
+    while (n1->next && n2->next)
     {
-        merged = createNode(n1->data);
+        n1 = n1->next;
+        n2 = n2->next;
+        append(merged, n1->data);
         append(merged, n2->data);
-
-        for (i = 1; i < l1; i++)
-        {
-            n1 = n1->next;
-            n2 = n2->next;
-            append(merged, n1->data);
-            append(merged, n2->data);
-        }
-        for (; i < l2; i++)
-        {
-            n2 = n2->next;
-            append(merged, n2->data);
-        }
     }
-    else
-    {
-        merged = createNode(n1->data);
+
+    while (n1 && (n1 = n1->next))
+        append(merged, n1->data);
+
+    while (n2 && (n2 = n2->next))
         append(merged, n2->data);
-
-        for (i = 1; i < l2; i++)
-        {
-            n1 = n1->next;
-            n2 = n2->next;
-            append(merged, n1->data);
-            append(merged, n2->data);
-        }
-        for (; i < l1; i++)
-        {
-            n1 = n1->next;
-            append(merged, n1->data);
-        }
-    }
 
     return merged;
 }
