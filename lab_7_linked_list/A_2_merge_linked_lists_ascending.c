@@ -21,9 +21,8 @@ node *mergeAscendingOrder(node *head1, node *head2);
 
 void main()
 {
-    int list1_arr[] = {5, 10, 15};
-    // int list1_arr[] = {5, 10, 15, 20, 453};
-    int list2_arr[] = {20, -3, 55, 76};
+    int list1_arr[] = {-99, 50, 100, 150, 232};
+    int list2_arr[] = {-2, 40, 76};
 
     node *list1 = createLinkedListFromArray(
         sizeof(list1_arr) / sizeof(list1_arr[0]),
@@ -38,7 +37,7 @@ void main()
     traverseLinkedList(list2);
 
     node *list3 = mergeAscendingOrder(list1, list2);
-    printf("List 3 obtained after alternate merging:\n");
+    printf("List 3 obtained after merging ascending:\n");
     traverseLinkedList(list3);
 }
 
@@ -118,27 +117,93 @@ int getLength(node *head)
 
 node *mergeAscendingOrder(node *list1, node *list2)
 {
-    node *merged, *n1, *n2;
+    node *head, *n, *n1, *n2;
 
     n1 = list1;
     n2 = list2;
 
-    merged = createNode(n1->data);
-    append(merged, n2->data);
+    int l1 = getLength(list1);
+    int l2 = getLength(list2);
+    int newLen = l1 + l2;
+    int pointedTo;
 
-    while (n1->next && n2->next)
+    if (n1->data < n2->data)
     {
+        n = n1;
         n1 = n1->next;
+        pointedTo = 0;
+    }
+    else
+    {
+        n = n2;
         n2 = n2->next;
-        append(merged, n1->data);
-        append(merged, n2->data);
+        pointedTo = 1;
     }
 
+    head = n;
+
+    // printf("## %d %d %d %d\n\n", n->data, n->next->data, n1->data, n2->data);
+
+    int i = 0;
+    while (n1 && n2)
+    {
+
+        // printf("i: %d | n: %d | n1: %d | n2: %d\n", i, n->next->data, n1->data, n2->data);
+
+        // node *smaller;
+        // smaller = n1->data < n2->data ? n1 : n2;
+        // printf("%d is smaller   \n\n", smaller->data);
+
+        if (pointedTo == 0)
+        {
+            printf("%d ", 0);
+
+            if (n1->next->data > n2->data)
+            {
+                n = n->next = n2;
+                n2 = n2->next;
+                pointedTo = 0;
+            }
+            else
+            {
+                n = n->next;
+                n1 = n1->next;
+            }
+        }
+        else
+        {
+            printf("%d ", 1);
+
+            if (n1->data < n2->next->data)
+            {
+                n = n->next = n1;
+                n1 = n1->next;
+                pointedTo = 1;
+            }
+            else
+            {
+                n = n->next;
+                n2 = n2->next;
+            }
+        }
+
+        printf("# %d \n\n", n->data);
+    }
+    printf("\n");
+
+    // printf("\n\n333     %d\n", n->data);
+
+    // i = 0;
+    // n = head;
+    // while (i++ < newLen)
+    //     n = n->next;
+    // n->next = NULL;
+
     while (n1 && (n1 = n1->next))
-        append(merged, n1->data);
+        append(head, n1->data);
 
     while (n2 && (n2 = n2->next))
-        append(merged, n2->data);
+        append(head, n2->data);
 
-    return merged;
+    return head;
 }
