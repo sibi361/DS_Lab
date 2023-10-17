@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 typedef struct node_ node;
 struct node_
@@ -16,7 +15,7 @@ void main()
 {
     node *list;
 
-    printf("\nEnter contents of linked list:\n\n");
+    printf("Enter contents of linked list:\n");
     list = createLinkedListRecursively(1);
     printf("\n");
 

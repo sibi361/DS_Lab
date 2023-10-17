@@ -17,9 +17,9 @@ void append(node *head, int item);
 void traverseLinkedList(node *head);
 node *insertBeforeNode(node *head, int before, int data);
 node *insertAfterNode(node *head, int after, int data);
-node *delete(node *head, int query);
+node *delete (node *head, int query);
 node *reverseLinkedList(node *head);
-void sortLinkedList(node *head);
+void *sortLinkedList(node *head);
 int getItemAtIndex(node *head, int index);
 void setItemAtIndex(node *head, int index, int data);
 node *insertWhileSorted(node *head, int item);
@@ -296,7 +296,7 @@ node *insertAfterNode(node *head, int after, int data)
     return head;
 }
 
-node *delete(node *head, int query)
+node *delete (node *head, int query)
 {
     node *n = head, *toBeDeleted;
     int found = 0;
@@ -382,7 +382,7 @@ node *reverseLinkedList(node *head)
     return prev;
 }
 
-void sortLinkedList(node *head)
+void *sortLinkedList(node *head)
 {
     node *n = head;
     int count, key, j;
@@ -443,4 +443,4 @@ void deleteAlternateNode(node *head)
             n = n->next;
         free(toBeDeleted);
     }
-}
+};
