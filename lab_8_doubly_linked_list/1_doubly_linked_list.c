@@ -18,7 +18,6 @@ node *delete(node *head, int index);
 void append(node *head, int item);
 void traverseLinkedList(node *head);
 node *insertRear(node *head, int item);
-node *deleteRear(node *head);
 node *insertBeforeNode(node *head, int temp_bf_af, int temp);
 node *insertAfterNode(node *head, int temp_bf_af, int temp);
 node *reverseDoublyLinkedList(node *head);
@@ -30,7 +29,7 @@ void main()
         pos,
         temp_bf_af;
 
-    // int test_array[] = {-3, -2, -1, 0, 1, 2, 3, 4, 5};
+    // int test_array[] = {-3, -2, -1, 0, 1, 2, 3P, 4, 5};
     int test_array[] = {50, 20, 30};
     // int test_array[] = {-3};
 
@@ -53,23 +52,22 @@ void main()
         6 Insert an element after another element\n\
         7 Traverse the list\n\
         8 Reverse the list\n\
-        9 Exit\n");
-        printf("Enter option: ");
+        9 Exit\n\
+Enter option: ");
         scanf("%d", &opt);
 
         switch (opt)
         {
-
         case 1:
             printf("Enter element to insert at rear: \n");
             scanf("%d", &temp);
-            list = insertRear(list, temp);
-            printf("List after tail insertion:\n");
+            append(list, temp);
+            printf("\nList after tail insertion:\n");
             break;
 
         case 2:
-            list = deleteRear(list);
-            printf("List after tail deletion:\n");
+            list = delete (list, getLength(list) - 1);
+            printf("\nList after tail deletion:\n");
             break;
 
         case 3:
@@ -78,14 +76,14 @@ void main()
             printf("Enter position to insert at: \n");
             scanf("%d", &pos);
             list = insert(list, pos - 1, temp);
-            printf("List after insertion:\n");
+            printf("\nList after insertion:\n");
             break;
 
         case 4:
             printf("Enter position of element to delete: ");
             scanf("%d", &pos);
             list = delete (list, pos - 1);
-            printf("List after deletion:\n");
+            printf("\nList after deletion:\n");
             break;
 
         case 5:
@@ -94,7 +92,7 @@ void main()
             printf("Enter element to insert before: ");
             scanf("%d", &temp_bf_af);
             list = insertBeforeNode(list, temp_bf_af, temp);
-            printf("List after insertion:\n");
+            printf("\nList after insertion:\n");
             break;
 
         case 6:
@@ -103,7 +101,7 @@ void main()
             printf("Enter element to insert after: ");
             scanf("%d", &temp_bf_af);
             list = insertAfterNode(list, temp_bf_af, temp);
-            printf("List after insertion:\n");
+            printf("\nList after insertion:\n");
             break;
 
         case 7:
@@ -206,17 +204,27 @@ int getLength(node *head)
 node *insert(node *head, int index, int item)
 {
     node *n = head;
-    int i = 1;
+    int i = 1, len = getLength(head);
 
-    if (index == 0)
+    if (head == NULL)
     {
-        node *newNode = createNode(head->prev, item);
-        newNode->next = head;
-        head->prev->next = newNode;
-        head = newNode;
+        node *new = createNode(NULL, item);
+        new->next = new;
+        new->prev = new;
+        return new;
     }
-    else if (index <= getLength(head))
+
+    if (index <= len)
     {
+        if (index == 0)
+        {
+            node *newNode = createNode(head->prev, item);
+            newNode->next = head;
+            head->prev->next = newNode;
+            head = newNode;
+            return head;
+        }
+
         while (i++ < index)
             n = n->next;
 
@@ -235,11 +243,12 @@ node *delete(node *head, int index)
     node *n = head, *toBeDeleted;
     int i = 0, len = getLength(head);
 
-    if (len < 1)
+    if (len < 2)
     {
         free(head);
         return NULL;
     }
+
     if (index == 0)
     {
         toBeDeleted = head;
@@ -249,12 +258,11 @@ node *delete(node *head, int index)
         free(toBeDeleted);
         return head;
     }
+
     else if (index <= len)
     {
         while (i++ < index)
             n = n->next;
-
-        printf("gonna del %d", n->data);
 
         toBeDeleted = n;
         n->next->prev = n->prev;
@@ -278,44 +286,12 @@ void traverseLinkedList(node *head)
         return;
     node *n = head;
 
-    int i = 0;
     do
     {
         printf("%d ", n->data);
         n = n->next;
-    } while (n != head && i++ < 10);
+    } while (n != head);
     printf("\n\n");
-}
-
-node *insertRear(node *head, int item)
-{
-    if (head == NULL)
-    {
-        node *new = createNode(NULL, item);
-        new->next = new;
-        new->prev = new;
-        return new;
-    }
-    else
-    {
-        node *tail = head->prev, *new = createNode(tail, item);
-        tail->next = new;
-        new->next = head;
-        head->prev = new;
-        return head;
-    }
-}
-
-node *deleteRear(node *head)
-{
-    if (getLength(head) < 2)
-        return NULL;
-
-    node *newTail = head->prev->prev, *deleted = head->prev;
-    newTail->next = head;
-    head->prev = newTail;
-    free(deleted);
-    return head;
 }
 
 node *insertBeforeNode(node *head, int temp_bf_af, int temp)
@@ -365,10 +341,8 @@ node *reverseDoublyLinkedList(node *head)
 {
     node *n = head, *temp;
 
-    int i = 0;
     do
     {
-        i++;
         temp = n->next;
         n->next = n->prev;
         n = n->prev = temp;
