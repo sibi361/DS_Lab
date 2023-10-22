@@ -2,12 +2,11 @@
 // Conversion of infix expression to Polish i.e. prefix notation
 
 /*
-method: infix -> postfix followed by reversing to get prefix
-this code is flawed as bc- becomes -cb when reversed
-
-can be fixed when evaluating by:
-    - swapping op1 and op2 when evaluating
-    - NOPE THIS DOES NOT WORK: negating the final result i.e. result *= -1;
+method:
+- reverse given infix
+- perform infix -> postfix while exchanging the precedence values for
+opening and closing parenthesis
+- reverse the obtained flawed postfix exp to get proper infix exp
 */
 
 #include <stdio.h>
@@ -36,8 +35,11 @@ void main()
     // printf("\nEnter infix expression: ");
     // scanf("%[^\n]s", exp);
 
-    char exp[] = "(a+(b-c)*d)"; // +*d-cba
+    char exp2[] = "(a+(b-c)*d)"; // +*d-bca
     // char exp[] = "a * b - c"; // -c*ba
+
+    // step 1: reverse the given infix expression
+    char *exp = reverse_string(exp2);
 
     max_size = strlen(exp);
     char exp_postfix[max_size], temp, stack_top;
@@ -47,6 +49,10 @@ void main()
     top = i = j = 0;
     stack[0] = '#'; // placeholder to indicate empty stack
 
+    // step 2: convert reversed infix to postfix while exchanging the
+    // precedence values for opening and closing parenthesis
+    // note that this will give kind of a postfix expression with all
+    // terms reversed; for e.g. (b-c) becomes cb- instead of bc-
     while ((temp = exp[i++]) != '\0')
     {
         if (temp == ' ') // skip spaces
@@ -78,8 +84,11 @@ void main()
         exp_postfix[j++] = pop(stack, &top);
     exp_postfix[j] = '\0';
 
+    printf("\nObtained terms reversed postfix expression:\n%s\n", exp_postfix);
+
+    // final step 3: reverse the obtained weird postfix expression
     char *exp_prefix = reverse_string(exp_postfix);
-    printf("\nObtained prefix expression:\n%s\n\n", exp_prefix);
+    printf("\nObtained prefix expression after reversing above expression:\n%s\n\n", exp_prefix);
 
     // print_stack(stack, top);
 }
@@ -105,7 +114,7 @@ int input_precedence(char literal)
 {
     switch (literal)
     {
-    case ')':
+    case '(':
         return 0;
     case '+':
     case '-':
@@ -116,7 +125,7 @@ int input_precedence(char literal)
         return 3;
     case '^':
         return 6;
-    case '(':
+    case ')':
         return 9;
     default:
         return 7;
@@ -129,7 +138,7 @@ int output_precedence(char literal)
     {
     case '#': // placeholder to indicate empty stack
         return -1;
-    case '(':
+    case ')':
         return 0;
     case '+':
     case '-':
@@ -140,7 +149,7 @@ int output_precedence(char literal)
         return 4;
     case '^':
         return 5;
-    case ')':
+    case '(':
         return 100;
     default:
         return 8;
