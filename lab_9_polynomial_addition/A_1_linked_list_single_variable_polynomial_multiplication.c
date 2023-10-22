@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define COMPARE(x, y) x > y ? 1 : x < y ? -1 \
-                                        : 0
-
 typedef struct node_ node;
 struct node_
 {
@@ -18,22 +15,32 @@ node *createLinkedListFromUserInput();
 int getLength(node *head);
 node *insert(node *head, int index, int coeff, int exp);
 void append(node *head, int coeff, int exp);
+void appendNode(node *head, node *new);
 void printPolynomial(node *head);
-node *polyAdd(node *poly_a, node *poly_b);
+node *findNodeWithGivenExpo(node *head, int exp);
+node *polyMultiply(node *poly_a, node *poly_b);
 
 void main()
 {
+    // int poly_array_1[][2] = {
+    //     {1, 3},
+    //     {3, 2},
+    // };
+
+    // int poly_array_2[][2] = {
+    //     {-5, 2},
+    //     {2, 1},
+    // };
+
     int poly_array_1[][2] = {
-        {1, 3},
-        {3, 2},
-        {2, 1},
-        {7, 0},
+        {3, 1},
+        {6, 0},
     };
 
     int poly_array_2[][2] = {
-        {-5, 2},
-        {2, 0},
-        {19, -2},
+        {5, 2},
+        {3, 1},
+        {10, 0},
     };
 
     // creating
@@ -50,15 +57,12 @@ void main()
     // traversing
     printf("\nPrinting polynomial A:\n");
     printPolynomial(poly_a);
-    printf("Number of terms in polynomial A: %d\n\n", getLength(poly_a));
     printf("\nPrinting polynomial B:\n");
     printPolynomial(poly_b);
-    printf("Number of terms in polynomial B: %d\n\n", getLength(poly_b));
 
-    node *poly_sum = polyAdd(poly_a, poly_b);
+    node *poly_multiplied = polyMultiply(poly_a, poly_b);
     printf("\nPrinting (A + B):\n");
-    printPolynomial(poly_sum);
-    printf("Number of terms in polynomial (A + B): %d\n\n", getLength(poly_sum));
+    printPolynomial(poly_multiplied);
 
     printf("\n");
 }
@@ -106,7 +110,7 @@ node *createLinkedListFromUserInput()
     i = 0;
     do
     {
-        printf("Enter coefficient and power: ");
+        printf("Enter coefficient and exponent: ");
         scanf("%d %d", &temp, &power);
         if (!i)
             head = createNode(temp, power);
@@ -164,6 +168,16 @@ void append(node *head, int coeff, int exp)
     insert(head, getLength(head), coeff, exp);
 }
 
+void appendNode(node *head, node *new)
+{
+    node *n = head;
+
+    while (n->next != NULL)
+        n = n->next;
+
+    n->next = new;
+}
+
 void printPolynomial(node *head)
 {
     node *n = head;
@@ -180,46 +194,46 @@ void printPolynomial(node *head)
     printf("\n");
 }
 
-node *polyAdd(node *a, node *b)
+node *findNodeWithGivenExpo(node *head, int exp)
+{
+    node *n = head;
+    if (n->next == NULL)
+        return NULL;
+    else
+        // skip initial placeholder 0x^0 node
+        n = n->next;
+
+    do
+        if (n->exp == exp)
+            return n;
+    while ((n = n->next) != NULL);
+
+    return NULL;
+}
+
+node *polyMultiply(node *a, node *b)
 {
     int sum;
-    node *result = createNode(0, 0);
+    node *b_orig = b, *result = createNode(0, 0), *new, *expoPresentInResult;
 
     while (a != NULL && b != NULL)
     {
-        switch (COMPARE(a->exp, b->exp))
+        node *new = createNode(a->coeff * b->coeff, a->exp + b->exp);
+        expoPresentInResult = findNodeWithGivenExpo(result, new->exp);
+
+        if (expoPresentInResult != NULL)
+            expoPresentInResult->coeff += new->coeff;
+        else
+            appendNode(result, new);
+
+        b = b->next;
+        if (b == NULL)
         {
-        case 1:
-            append(result, a->coeff, a->exp);
             a = a->next;
-            break;
-
-        case 0:
-            sum = a->coeff + b->coeff;
-            append(result, sum, a->exp);
-            a = a->next;
-            b = b->next;
-            break;
-
-        case -1:
-            append(result, b->coeff, b->exp);
-            b = b->next;
-            break;
-            break;
+            b = b_orig;
         }
     }
 
-    // appending remaining terms which were not common to both
-    while (a)
-    {
-        append(result, a->coeff, a->exp);
-        a = a->next;
-    }
-    while (b)
-    {
-        append(result, b->coeff, b->exp);
-        b = b->next;
-    }
-
+    // skip initial placeholder
     return result->next;
 }
