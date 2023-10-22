@@ -15,11 +15,11 @@ node *createLinkedListFromUserInput();
 int getLength(node *head);
 node *insert(node *head, int index, int item);
 node *delete(node *head, int index);
-void append(node *head, int item);
+node *append(node *head, int item);
 void traverseLinkedList(node *head);
 node *insertRear(node *head, int item);
 node *insertBeforeNode(node *head, int temp_bf_af, int temp);
-node *insertAfterNode(node *head, int temp_bf_af, int temp);
+void insertAfterNode(node *head, int temp_bf_af, int temp);
 node *reverseDoublyLinkedList(node *head);
 
 void main()
@@ -61,7 +61,7 @@ Enter option: ");
         case 1:
             printf("Enter element to insert at rear: \n");
             scanf("%d", &temp);
-            append(list, temp);
+            list = append(list, temp);
             printf("\nList after tail insertion:\n");
             break;
 
@@ -100,7 +100,7 @@ Enter option: ");
             scanf("%d", &temp);
             printf("Enter element to insert after: ");
             scanf("%d", &temp_bf_af);
-            list = insertAfterNode(list, temp_bf_af, temp);
+            insertAfterNode(list, temp_bf_af, temp);
             printf("\nList after insertion:\n");
             break;
 
@@ -153,12 +153,6 @@ node *createLinkedListFromArray(int length, int array[])
     for (int i = 1; i < length; i++)
         append(head, array[i]);
 
-    node *n = head;
-    while (n->next != NULL)
-        n = n->next;
-    n->next = head;
-    head->prev = n;
-
     return head;
 }
 
@@ -178,12 +172,6 @@ node *createLinkedListFromUserInput()
         append(head, temp);
     }
 
-    node *n = head;
-    while (n->next != NULL)
-        n = n->next;
-    n->next = head;
-    head->prev = n;
-
     return head;
 }
 
@@ -195,7 +183,7 @@ int getLength(node *head)
     if (n == NULL)
         return 0;
 
-    while (n->next && (n = n->next) != head)
+    while ((n = n->next) != NULL)
         length++;
 
     return length;
@@ -218,9 +206,9 @@ node *insert(node *head, int index, int item)
     {
         if (index == 0)
         {
-            node *newNode = createNode(head->prev, item);
+            node *newNode = createNode(NULL, item);
             newNode->next = head;
-            head->prev->next = newNode;
+            head->prev = newNode;
             head = newNode;
             return head;
         }
@@ -230,8 +218,11 @@ node *insert(node *head, int index, int item)
 
         node *newNode = createNode(n, item);
         newNode->next = n->next;
+        if (n->next != NULL)
+            n->next->prev = newNode;
         n->next = newNode;
     }
+
     else
         printf("\nGiven index is greater than maximum index\n\n");
 
@@ -252,32 +243,32 @@ node *delete(node *head, int index)
     if (index == 0)
     {
         toBeDeleted = head;
-        head->prev->next = head->next;
-        head->next->prev = head->prev;
-        head = head->next;
+        head->next->prev = NULL;
         free(toBeDeleted);
-        return head;
+        return head->next;
     }
 
-    else if (index <= len)
+    else if (index < len)
     {
         while (i++ < index)
             n = n->next;
 
         toBeDeleted = n;
-        n->next->prev = n->prev;
         n->prev->next = n->next;
+        if (n->next != NULL)
+            n->next->prev = n->prev;
         free(toBeDeleted);
     }
+
     else
         printf("\nGiven index is greater than maximum index\n\n");
 
     return head;
 }
 
-void append(node *head, int item)
+node *append(node *head, int item)
 {
-    insert(head, getLength(head), item);
+    return insert(head, getLength(head), item);
 }
 
 void traverseLinkedList(node *head)
@@ -290,23 +281,30 @@ void traverseLinkedList(node *head)
     {
         printf("%d ", n->data);
         n = n->next;
-    } while (n != head);
+    } while (n != NULL);
     printf("\n\n");
 }
 
 node *insertBeforeNode(node *head, int temp_bf_af, int temp)
 {
     node *n = head;
+    int found = 0;
 
     do
     {
         if (n->data == temp_bf_af)
+        {
+            found = 1;
             break;
+        }
         n = n->next;
-    } while (n != head);
+    } while (n->next != NULL);
+    if (n->data == temp_bf_af)
+        found = 1;
 
     node *new = createNode(n->prev, temp);
-    new->prev->next = new;
+    if (n != head)
+        new->prev->next = new;
     new->next = n;
     new->next->prev = new;
 
@@ -315,26 +313,34 @@ node *insertBeforeNode(node *head, int temp_bf_af, int temp)
     return head;
 }
 
-node *insertAfterNode(node *head, int temp_bf_af, int temp)
+void insertAfterNode(node *head, int temp_bf_af, int temp)
 {
     node *n = head;
+    int found = 0;
 
-    do
+    while (n->next != NULL)
     {
         if (n->data == temp_bf_af)
+        {
+            found = 1;
             break;
+        }
         n = n->next;
-    } while (n != head);
+    }
+    if (n->data == temp_bf_af)
+        found = 1;
 
-    printf("%d\n", n->data);
+    if (!found)
+    {
+        printf("\n%d not found in list\n", temp_bf_af);
+        return;
+    }
 
     node *new = createNode(n, temp);
     new->next = n->next;
-    new->next->prev = new;
+    if (n->next != NULL)
+        new->next->prev = new;
     n->next = new;
-    printf("%d\n", new->data);
-
-    return head;
 }
 
 node *reverseDoublyLinkedList(node *head)
@@ -345,9 +351,12 @@ node *reverseDoublyLinkedList(node *head)
     {
         temp = n->next;
         n->next = n->prev;
-        n = n->prev = temp;
-    } while (n != head);
-    head = n->next;
+        n->prev = temp;
+        if (temp != NULL)
+            n = temp;
+        else
+            break;
+    } while (1);
 
-    return head;
+    return n;
 }
