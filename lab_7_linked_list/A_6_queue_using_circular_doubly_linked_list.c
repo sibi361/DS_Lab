@@ -1,5 +1,5 @@
 /*
-Implementing queue using singly linked list
+Implementing queue using doubly circular linked list
 
 queue and front are one and the same here
 */
@@ -12,11 +12,12 @@ queue and front are one and the same here
 typedef struct node node;
 struct node
 {
+    node *previous;
     int data;
     node *next;
 };
 
-node *createNode(int data);
+node *createNode(node *previous, int data);
 int insert(node **queue, int item);
 int delete(node **queue);
 void printQueue(node *queue);
@@ -79,9 +80,10 @@ void main()
     }
 }
 
-node *createNode(int data)
+node *createNode(node *previous, int data)
 {
     node *temp = (node *)malloc(sizeof(node));
+    temp->previous = previous;
     temp->data = data;
     temp->next = NULL;
     return temp;
@@ -89,17 +91,20 @@ node *createNode(int data)
 
 int insert(node **queue, int item)
 {
-    node *temp = createNode(item), *n;
+    node *temp, *n;
     int len = 0;
 
     if (!*queue)
     {
+        temp = createNode(NULL, item), *n;
+        temp->previous = temp;
+        temp->next = temp;
         *queue = temp;
         return 1;
     }
 
     n = *queue;
-    while (n->next != NULL)
+    while (n->next != *queue)
     {
         n = n->next;
         len++;
@@ -108,6 +113,8 @@ int insert(node **queue, int item)
     if (len + 1 == MAX) // queue overflow
         return 0;
 
+    temp = createNode(n, item);
+    temp->next = n->next;
     n->next = temp;
 
     return 1;
@@ -115,7 +122,7 @@ int insert(node **queue, int item)
 
 int delete(node **queue)
 {
-    node *deleted;
+    node *deleted, *n;
     int data;
 
     if (!*queue) // queue underflow
@@ -123,7 +130,17 @@ int delete(node **queue)
 
     deleted = *queue;
     data = deleted->data;
-    *queue = (*queue)->next;
+
+    // updating tail
+    n = *queue;
+    while (n->next != *queue)
+        n = n->next;
+
+    if (n == *queue) // i.e. head equals found tail
+        *queue = NULL;
+    else
+        *queue = n->next = (*queue)->next;
+
     free(deleted);
     return data;
 }
@@ -131,13 +148,15 @@ int delete(node **queue)
 void printQueue(node *queue)
 {
     printf("\n");
+    if (!queue)
+        return;
 
     node *n = queue;
-    while (n != NULL)
+    do
     {
         printf("%d ", n->data);
         n = n->next;
-    };
+    } while (n != queue);
 
     printf("\n");
 }
@@ -154,5 +173,5 @@ void clearQueue(node *queue)
         toBeDeleted = n;
         n = n->next;
         free(toBeDeleted);
-    } while (n != NULL);
+    } while (n != queue);
 }
