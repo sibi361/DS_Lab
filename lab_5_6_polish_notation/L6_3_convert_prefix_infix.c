@@ -2,12 +2,11 @@
 // Conversion of prefix expression to infix expression
 
 /*
-method: reverse prefix followed postfix -> infix
-this code could have been flawed as during prefix -> infix
-*BC becomes *CB instead of *BC
+method: reverse prefix followed by modified postfix -> infix
 
-fixed by not saving op2 i.e. when operator found,
-first one popped is appended first followed by the second one popped
+modification: do not save op2 i.e. when operator found,
+first one popped is appended to final expression right away
+followed by the second one popped
 opposite to how it was done in postfix -> infix
 */
 
@@ -31,8 +30,8 @@ void main()
     // char _exp[] = "+*d-bca"; // (a+(b-c)*d)
 
     // https://www.cs.kent.edu/~nmadi/CS23001/fix-Quiz.pdf
-    // ( ( A + ( B * C ) ) / D )
-    char _exp[] = "/ D + * B    C A";
+    // ( ( A + ( B - C ) ) / D )
+    char _exp[] = "+ A / - B C D";
 
     // ( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J )
     // char _exp[] = "+ J * * E * G * F + * D + C B A H";
@@ -70,15 +69,13 @@ void main()
             // too far
             temp_exp[j] = '\0';
 
-            strcpy(op2, pop_2d(stack, &top)); // save op2
-
             strcat(temp_exp, pop_2d(stack, &top)); // append op1
 
             j = strlen(temp_exp);
             temp_exp[j++] = temp; // append operator
             temp_exp[j] = '\0';
 
-            strcat(temp_exp, op2); // append op2
+            strcat(temp_exp, pop_2d(stack, &top)); // append op2
 
             j = strlen(temp_exp);
             temp_exp[j++] = ')';

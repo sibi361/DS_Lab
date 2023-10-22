@@ -2,7 +2,15 @@
 Polish Notation
 Evaluation of prefix expression
 
-method: convert prefix to postfix and evaluate postfix
+method: convert prefix to postfix and evaluate postfix with a modification
+
+ /*
+Since the input postfix exp is obtained by reversing a valid prefix expression,
+terms get swapped eg. bc- => (b - c) when reversed would be -cb => (c - b)
+to fix this operands have to be swapped
+so the first value popped will become the first operand for the evaluation
+and the second one will be op2
+opposite to what was done in the normal postfix evaluate script
 */
 
 #include <stdio.h>
@@ -26,7 +34,7 @@ void main()
 
     // test cases
     // 9-((8/2)*(2+3)) = -11
-    char _exp[MAX_SIZE] = "-*+23 /829";
+    char _exp[MAX_SIZE] = "-9*/82+23";
 
     // (6 - 3) * (4 + 5) = 27
     // char _exp[MAX_SIZE] = "*-63+45"; // correct prefix exp doesn't
@@ -58,14 +66,6 @@ int eval_postfix_ie_reversed_prefix(char exp[])
         }
         else
         {
-            /*
-            since the input postfix exp is obtained by reversing a valid prefix
-            expression, some terms might be swapped
-            eg. bc- => (b - c) when reversed would be -cb => (c - b)
-            to fix this operands have to be swapped
-            so the first value popped will be op1 and the second one will be op2
-            opposite to what was done in the normal postfix evaluate script
-            */
             op1 = pop(stack, &top);
             op2 = pop(stack, &top);
 
