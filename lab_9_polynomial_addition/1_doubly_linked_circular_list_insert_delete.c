@@ -38,12 +38,13 @@ void main()
     printf("List at beginning:\n");
     traverseLinkedList(list);
 
-    while (opt != 3)
+    while (opt != 4)
     {
         printf("Available options:\n\
         1 Insert\n\
         2 Delete\n\
-        3 Exit\n");
+        3 Traverse\n\
+        4 Exit\n");
         printf("Enter option: ");
         scanf("%d", &opt);
 
@@ -68,6 +69,11 @@ void main()
             break;
 
         case 3:
+            printf("Traversing doubly linked circular list:\n");
+            traverseLinkedList(list);
+            break;
+
+        case 4:
             printf("Exiting\n");
             break;
 
@@ -106,11 +112,7 @@ node *createLinkedListFromArray(int length, int array[])
     head->prev = head->next = head;
 
     for (int i = 1; i < length; i++)
-    {
-        printf("%d\n", array[i]);
-
         append(head, array[i]);
-    }
 
     return head;
 }

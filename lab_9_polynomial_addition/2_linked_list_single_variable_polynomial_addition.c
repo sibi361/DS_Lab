@@ -184,7 +184,6 @@ node *polyAddition(node *a, node *b)
     node *result = createNode(0, 0);
 
     while (a != NULL && b != NULL)
-    {
         switch (COMPARE(a->exp, b->exp))
         {
         case 1:
@@ -204,7 +203,6 @@ node *polyAddition(node *a, node *b)
             b = b->next;
             break;
         }
-    }
 
     // appending remaining terms which were not common to both
     while (a)
